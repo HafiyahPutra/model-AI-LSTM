@@ -1,13 +1,18 @@
 from fastapi import FastAPI
-from lstm_predictor import predict_bitcoin_price
+from fastapi.middleware.cors import CORSMiddleware
+from lstm_model import predict_price
 
 app = FastAPI()
 
-@app.get("/")
-def root():
-    return {"message": "Selamat datang di API Prediksi Harga Bitcoin dengan LSTM"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Ganti dengan domain React-mu kalau perlu
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/predict")
-def predict():
-    predicted_price = predict_bitcoin_price()
-    return {"predicted_price": predicted_price}
+def get_prediction():
+    price = predict_price()
+    return {"predicted_price": price}
